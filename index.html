@@ -592,13 +592,22 @@ async function sealDreams(){
   document.getElementById('dream-sent').style.display='block';
   fl();sk(5,250);pw();
   for(let i=0;i<25;i++)setTimeout(()=>spawnH(W()*(.1+Math.random()*.8),H()*(.15+Math.random()*.7)),i*50);
+  
   try{
-    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
-      subject: '💖 Sueños que Geraldine eligió para nosotros',
-      message: 'Geraldine eligió estos sueños para vivir juntos:\n\n' + selected.map((s,i)=>(i+1)+'. '+s).join('\n') + '\n\n— Enviado automáticamente desde Mi Universo ✦',
-      name: 'Mi Universo ✦'
-    });
-  }catch(e){console.log('email silent fail');}
+    await emailjs.send(
+      EMAILJS_SERVICE_ID, 
+      EMAILJS_TEMPLATE_ID, 
+      {
+        title: '💖 Sueños que Geraldine eligió para nosotros', // <--- CAMBIO: De 'subject' a 'title'
+        message: 'Geraldine eligió estos sueños para vivir juntos:\n\n' + selected.map((s,i)=>(i+1)+'. '+s).join('\n') + '\n\n— Enviado automáticamente desde Mi Universo ✦',
+        name: 'Mi Universo ✦',
+        email: 'gonzalezwerner88@gmail.com' // <--- NUEVO: Requerido por tu plantilla para 'Reply To'
+      },
+      EMAILJS_PUBLIC_KEY // <--- NUEVO: Se pasa la llave pública para evitar fallos de inicialización
+    );
+  } catch(e) {
+    console.error('Error de EmailJS:', e.text || e); // <--- CAMBIO: Para ver el error real en consola si algo falla
+  }
 }
 
 // ═════════════════════════════
